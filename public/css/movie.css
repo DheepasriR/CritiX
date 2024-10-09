@@ -1,0 +1,118 @@
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background-color: black;
+  color: white;
+}
+
+#movie-info {
+  margin: 20px 0;
+}
+
+#movie-info img {
+  width: 300px;
+  height: 450px;
+  object-fit: cover;
+}
+
+#reviews {
+  margin-top: 50px;
+}
+
+.review {
+  margin: 5px 0;
+  border-bottom: 1px solid gray;
+  font-size: 15px;
+  text-align: left;
+}
+
+.rating-stars {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.star {
+  width: 40px;
+  height: 40px;
+  margin: 0 5px;
+  cursor: pointer;
+}
+
+.star img {
+  width: 100%;
+  height: auto;
+}
+
+#reviewForm {
+  margin-top: 40px;
+}
+
+textarea {
+  width: 100%;
+  max-width: 500px;
+  height: 100px;
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  resize: none;
+}
+
+button[type="submit"] {
+  padding: 10px 20px;
+  background-color: #f8ff99;
+  color: black;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button[type="submit"]:hover {
+  background-color: yellow;
+}
+
+.navbar {
+  background-color: #161515;
+}
+
+.navbar-brand {
+  color: yellow !important;
+  font-size: 50px;
+  font-weight: bolder;
+}
+
+.navbar-nav .nav-link {
+  color: yellow;
+}
+
+.navbar-nav .nav-link:hover {
+  color: yellow !important;
+}
+
+footer {
+  background-color: #161515;
+  color: white;
+  text-align: center;
+  padding: 10px 0;
+  position: relative;
+  bottom: 0;
+  width: 100%;
+}
+
+.buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.buttonStyle {
+  padding: 10px 20px;
+  background-color: #f8ff99;
+  color: black;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}

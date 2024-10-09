@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Movie</title>
+
+    <!-- for bootstrap -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+
+    <!-- for external stylesheet -->
+    <link rel="stylesheet" href="/css/movie.css" />
+  </head>
+
+  <body>
+    <!-- navbar content -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <a class="navbar-brand" href="#">CritiX</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- nav bar collapsing in mobile views -->
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/logout">Logout</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4">
+          <!-- movie data will be displayed here(title and img) after it is fetched by js -->
+          <div id="movie-info"></div>
+        </div>
+
+        <div class="col-md-8 mt-5 pt-5">
+          <!-- review will be displayed here through js -->
+          <div id="reviews"></div>
+
+          <!-- review form -->
+          <form id="reviewForm">
+            <!-- area to write comments -->
+            <textarea
+              id="comment"
+              placeholder="Write your comment..."
+            ></textarea>
+
+            <!-- allows users to rate the movie using stars. 
+            it will be selected and updated using js -->
+            <div id="starRating" class="rating-stars">
+              <div class="star" data-value="1">
+                <img
+                  src="/images/star-unfilled.png"
+                  alt="1 Star"
+                  class="unfilled"
+                />
+              </div>
+              <div class="star" data-value="2">
+                <img
+                  src="/images/star-unfilled.png"
+                  alt="2 Stars"
+                  class="unfilled"
+                />
+              </div>
+              <div class="star" data-value="3">
+                <img
+                  src="/images/star-unfilled.png"
+                  alt="3 Stars"
+                  class="unfilled"
+                />
+              </div>
+              <div class="star" data-value="4">
+                <img
+                  src="/images/star-unfilled.png"
+                  alt="4 Stars"
+                  class="unfilled"
+                />
+              </div>
+              <div class="star" data-value="5">
+                <img
+                  src="/images/star-unfilled.png"
+                  alt="5 Stars"
+                  class="unfilled"
+                />
+              </div>
+            </div>
+
+            <div class="buttons">
+              <!-- submit button -->
+              <button class="buttonStyle" type="submit">Submit Review</button>
+
+              <!-- button to go back to the movie page -->
+              <button class="buttonStyle" type="button" id="backToMovies">
+                Back to Movies
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- footer content -->
+    <footer>
+      <p>&copy; 2024 CritiX. All rights reserved.</p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+      // runs after the html content is fully loaded
+      document.addEventListener("DOMContentLoaded", () => {
+        const movieId = window.location.pathname.split("/")[2];
+        // fetches the movie id from the url by spliting it and by fetching id
+        // from third(2) index
+
+        // fetches the specifc movie details using id
+        fetch(`/api/movies/${movieId}`)
+          // throws error if server response is not success
+          // returns json object containing the movie data if successfull
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+          })
+          // displaying movie info
+          .then((movie) => {
+            const movieInfo = document.getElementById("movie-info");
+            if (movie && movie.title) {
+              movieInfo.innerHTML = `
+          <h2>${movie.title}</h2>
+          <img src="/images/${movie.title.replace(/ /g, "_")}.jpg" alt="${
+                movie.title
+              }">
+        `;
+            } else {
+              movieInfo.innerHTML = "<p>Movie not found!</p>";
+            }
+          })
+          //error is catched here
+          .catch((error) => {
+            document.getElementById("movie-info").innerHTML =
+              "<p>Error loading movie details.</p>";
+          });
+
+        // fetches the reviews for specifc movie using movie id
+        fetch(`/api/reviews/${movieId}`)
+          .then((response) => response.json()) // json response will be an array
+          .then((reviews) => {
+            const reviewsContainer = document.getElementById("reviews");
+
+            // for each movie creates a div for reviews, represents the
+            //rating through stars anmd appends the reviews
+            reviews.forEach((review) => {
+              const div = document.createElement("div");
+              div.classList.add("review");
+
+              const starEmojis = "⭐".repeat(review.rating);
+              div.innerHTML = `<p><strong>${review.username}</strong>: ${review.comment} <span>${starEmojis}</span></p>`;
+              reviewsContainer.appendChild(div);
+            });
+          })
+          .catch((error) => {
+            console.error("Error fetching reviews:", error);
+          });
+
+        let selectedRating = 0; // for storing the rating selected by teh user
+        const stars = document.querySelectorAll(".star img");
+        // collects the number of filled stars for calculating rstings
+
+        // for each star selcetd by the user, it is caotured by
+        //the datavalue attribute and is saved in selectedRating variable
+        stars.forEach((star) => {
+          star.addEventListener("click", function () {
+            selectedRating = this.parentElement.getAttribute("data-value");
+            updateStars(selectedRating);
+          });
+        });
+
+        // updates teh star based on the selection
+        // if the currect index is less than selcted one, it chanhes to the filled one
+        function updateStars(rating) {
+          stars.forEach((star, index) => {
+            star.src =
+              index < rating
+                ? "/images/star-filled.png"
+                : "/images/star-unfilled.png";
+          });
+        }
+
+        // for submitting the reviews
+        // event is triggered when the user submits the form
+        document
+          .getElementById("reviewForm")
+          .addEventListener("submit", (event) => {
+            event.preventDefault(); // prevents the page from reloading since its done using js
+            const comment = document.getElementById("comment").value;
+
+            // sunmits teh data review
+            // body would be serialised to json format
+            fetch("/api/reviews", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                movieId,
+                comment,
+                rating: selectedRating,
+              }),
+            }).then(() => {
+              window.location.reload(); //the page reload after the review is submitted
+            });
+          });
+
+        // when clicked redirects to hoem page
+        document
+          .getElementById("backToMovies")
+          .addEventListener("click", () => {
+            window.location.href = "/home";
+          });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login/Register</title>
+
+    <!-- for bootstrap -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+
+    <!-- for font awesome icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+
+    <!-- for external stylesheet -->
+    <link rel="stylesheet" href="/css/login.css" />
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="row justify-content-center align-items-center vh-100">
+        <div class="inner-container p-5 col-md-6">
+          <h1 style="text-align: center">
+            Welcome to
+            <span style="color: yellow; font-weight: bolder">CritiX</span>
+          </h1>
+
+          <!-- tab pills - login and register -->
+          <ul
+            class="nav nav-pills nav-justified mb-3 mt-3"
+            id="ex1"
+            role="tablist"
+          >
+            <li class="nav-item" role="presentation">
+              <a
+                class="nav-link active"
+                id="tab-login"
+                data-toggle="pill"
+                href="#pills-login"
+                role="tab"
+                aria-controls="pills-login"
+                aria-selected="true"
+                >Login</a
+              >
+            </li>
+            <li class="nav-item" role="presentation">
+              <a
+                class="nav-link"
+                id="tab-register"
+                data-toggle="pill"
+                href="#pills-register"
+                role="tab"
+                aria-controls="pills-register"
+                aria-selected="false"
+                >Register</a
+              >
+            </li>
+          </ul>
+
+          <div class="tab-content">
+            <div
+              class="tab-pane fade show active"
+              id="pills-login"
+              role="tabpanel"
+              aria-labelledby="tab-login"
+            >
+              <form action="/login" method="POST">
+                <div class="text-center mb-3">
+                  <p>Already one of us? Then, Sign in with:</p>
+                  <button type="button" class="btn btn-link btn-floating mx-1">
+                    <i class="fab fa-facebook-f"></i>
+                  </button>
+                  <button type="button" class="btn btn-link btn-floating mx-1">
+                    <i class="fab fa-google"></i>
+                  </button>
+                  <button type="button" class="btn btn-link btn-floating mx-1">
+                    <i class="fab fa-twitter"></i>
+                  </button>
+                  <button type="button" class="btn btn-link btn-floating mx-1">
+                    <i class="fab fa-github"></i>
+                  </button>
+                </div>
+                <p class="text-center">or:</p>
+                <div class="form-group">
+                  <label for="loginUsername">Username</label>
+                  <input
+                    type="text"
+                    id="loginUsername"
+                    name="username"
+                    class="form-control"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="loginPassword">Password</label>
+                  <input
+                    type="password"
+                    id="loginPassword"
+                    name="password"
+                    class="form-control"
+                    required
+                  />
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">
+                  Sign in
+                </button>
+              </form>
+            </div>
+
+            <div
+              class="tab-pane fade"
+              id="pills-register"
+              role="tabpanel"
+              aria-labelledby="tab-register"
+            >
+              <form action="/register" method="POST">
+                <div class="text-center mb-3">
+                  <p>New to our family? Then, Sign up with:</p>
+                  <button type="button" class="btn btn-link btn-floating mx-1">
+                    <i class="fab fa-facebook-f"></i>
+                  </button>
+                  <button type="button" class="btn btn-link btn-floating mx-1">
+                    <i class="fab fa-google"></i>
+                  </button>
+                  <button type="button" class="btn btn-link btn-floating mx-1">
+                    <i class="fab fa-twitter"></i>
+                  </button>
+                  <button type="button" class="btn btn-link btn-floating mx-1">
+                    <i class="fab fa-github"></i>
+                  </button>
+                </div>
+                <p class="text-center">or:</p>
+                <div class="form-group">
+                  <label for="registerUsername">Username</label>
+                  <input
+                    type="text"
+                    id="registerUsername"
+                    name="username"
+                    class="form-control"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="registerPassword">Password</label>
+                  <input
+                    type="password"
+                    id="registerPassword"
+                    name="password"
+                    class="form-control"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="registerRepeatPassword">Repeat password</label>
+                  <input
+                    type="password"
+                    id="registerRepeatPassword"
+                    name="repeat_password"
+                    class="form-control"
+                    required
+                  />
+                </div>
+                <div class="form-check mb-4">
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    id="registerCheck"
+                    required
+                  />
+                  <label class="form-check-label" for="registerCheck">
+                    I have read and agree to the terms
+                  </label>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">
+                  Sign up
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
+</html>

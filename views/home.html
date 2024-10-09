@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home</title>
+
+    <!-- for bootstrap -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+
+    <!-- for external stylesheet -->
+    <link rel="stylesheet" href="/css/home.css" />
+  </head>
+
+  <body>
+    <!-- navbar content -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <a class="navbar-brand" href="#">CritiX</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- nav bar collapsing in mobile views -->
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle"
+              href="#"
+              id="navbarDropdown"
+              role="button"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              Movie Categories
+            </a>
+            <div
+              class="dropdown-menu dropdown-menu-right"
+              aria-labelledby="navbarDropdown"
+            >
+              <a class="dropdown-item" href="#action-section">Action</a>
+              <a class="dropdown-item" href="#comedy-section">Comedy</a>
+              <a class="dropdown-item" href="#animation-section">Animation</a>
+              <a class="dropdown-item" href="#romance-section">Romance</a>
+              <a class="dropdown-item" href="#disney-section">Disney</a>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/logout">Logout</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- main section -->
+    <div class="container-fluid" id="categories"></div>
+
+    <!-- footer content -->
+    <footer>
+      <p>&copy; 2024 CritiX. All rights reserved.</p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+      // runs after the html content is fully loaded
+      document.addEventListener("DOMContentLoaded", () => {
+        // requests the movies to the api endpoint in server.js
+        fetch("/api/movies")
+          .then((response) => response.json()) // movie data converted into JSON format
+          .then((movies) => {
+            const categories = {}; // creates empty object to hold movies by their categories
+            // loops through each movie and adds it to the correct category
+            movies.forEach((movie) => {
+              // if category doesnt exist creates the category
+              if (!categories[movie.category]) {
+                categories[movie.category] = [];
+              }
+              // oushes teh correct movie to the correct category
+              categories[movie.category].push(movie);
+            });
+
+            //indicated the html element that has the id categorues
+            const container = document.getElementById("categories");
+            Object.keys(categories).forEach((category) => {
+              const section = document.createElement("section"); // creates section for each category
+              section.classList.add("my-4");
+              // assignan id to each section based on the categoruy
+              section.id = `${category.toLowerCase()}-section`;
+              const header = document.createElement("h2");
+              header.textContent =
+                category.charAt(0).toUpperCase() +
+                category.slice(1).toLowerCase();
+              header.style.color = "yellow";
+              header.style.textAlign = "center";
+              section.appendChild(header);
+
+              // creating the movie slider for each category
+              const movieSection = document.createElement("div");
+              movieSection.classList.add("movie-section");
+
+              //creating nav arrows
+              const leftArrow = document.createElement("button");
+              leftArrow.innerHTML = "&#10094;";
+              leftArrow.classList.add("arrow", "arrow-left");
+
+              const rightArrow = document.createElement("button");
+              rightArrow.innerHTML = "&#10095;";
+              rightArrow.classList.add("arrow", "arrow-right");
+
+              // creates slider container
+              const slider = document.createElement("div");
+              slider.classList.add("movie-slider");
+
+              // for each movie in the category, a movie item and image is created
+              categories[category].forEach((movie) => {
+                const item = document.createElement("div");
+                item.classList.add("movie-item");
+
+                const img = document.createElement("img");
+                img.src = `/images/${movie.title.replace(/ /g, "_")}.jpg`;
+                img.alt = movie.title;
+
+                // when a movie is clicked it is redirected to the movie page with specific id
+                img.addEventListener(
+                  "click",
+                  () => (window.location.href = `/movie/${movie.id}`)
+                );
+
+                //image is added to the movie item
+                //then the movie item is added to the slider
+                item.appendChild(img);
+                slider.appendChild(item);
+              });
+
+              // when arrows are clicked the slider moves by 1000 pixels
+              leftArrow.addEventListener("click", () => {
+                slider.scrollBy({ left: -1000, behavior: "smooth" });
+              });
+
+              rightArrow.addEventListener("click", () => {
+                slider.scrollBy({ left: 1000, behavior: "smooth" });
+              });
+
+              movieSection.appendChild(leftArrow);
+              movieSection.appendChild(slider);
+              movieSection.appendChild(rightArrow);
+
+              section.appendChild(movieSection);
+              container.appendChild(section);
+            });
+          })
+          .catch((error) => console.error("Error fetching movies:", error));
+      });
+    </script>
+  </body>
+</html>
